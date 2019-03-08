@@ -182,6 +182,38 @@ dashBoardMap.prototype.showMarker = function(id){
     curveToShow.setMap(this.map);
   }
 }
+dashBoardMap.prototype.removeAllMarker =  function(){
+  //this.markers.length
+  curveMarker.forEach((item)=>{
+    if(item){
+      item.setMap(null);
+    }
+  });
+
+  this.arrowMarker.forEach((arrowToremove)=>{
+    if(arrowToremove.length > 1){
+      arrowToremove[0].setMap(null);
+      arrowToremove[1].setMap(null);
+    }else{
+      arrowToremove[0].setMap(null);
+    }
+  });
+  this.markers.forEach((markerToRemove)=>{
+    if(markerToRemove){
+      if(markerToRemove.length > 1){
+        markerToRemove[0].setMap(null);
+        markerToRemove[1].setMap(null);
+      }else{
+        markerToRemove[0].setMap(null);
+      }
+    }
+  })
+
+  this.markers = [];
+  this.arrowMarker =[];
+  curveMarker = [];
+
+}
 dashBoardMap.prototype.hideMarker = function(id){
   var markerToRemove = this.markers.find(item=>item['id'] == id);
   var arrowToremove = this.arrowMarker.find(item=>item['id'] == id);
@@ -233,13 +265,15 @@ dashBoardMap.prototype.createMarker = function (objectLongLititue, isArrow, arro
       label: 34,
     });
   });
+
+
+
   buildMarker.arrowInfo = {
     isArrow: isArrow || false,
     arrowInfo: arrowInfo || false
   };
   buildMarker.id = id;
   this.markers.push(buildMarker);
-
   this.markers.forEach((item, i) => {
     item[0].addListener('mouseover', function () {
       infoWindow[i].open(this.map, item[0]);
@@ -270,11 +304,12 @@ dashBoardMap.prototype.createArrow = function (Marker, pos, rotation, direction)
 
 
 dashBoardMap.prototype.updateCurveMarker = function () {
+  //callBack(dataToSend);
+
   var markers = this.markers;
   var map = this.map;
   var Point = google.maps.Point;
   var Marker = google.maps.Marker;
-
   markers.forEach((item, i) => {
     if (item.length > 1) {
       var pos1 = item[0].getPosition(), // latlng
@@ -309,7 +344,6 @@ dashBoardMap.prototype.updateCurveMarker = function () {
         arrowBuilder.id = item.id;
         this.arrowMarker.push(arrowBuilder);
       }
-      // console.log(pathDef);
       var zoom = map.getZoom(),
         scale = 1 / (Math.pow(2, -zoom));
       var symbol = {
@@ -330,7 +364,6 @@ dashBoardMap.prototype.updateCurveMarker = function () {
             color: "red"
           }
         });
-       // this.curveMarker.push(curveMarker[i]);
         curveMarker[i].id = item.id;
       } else {
         curveMarker[i].setOptions({
@@ -341,7 +374,6 @@ dashBoardMap.prototype.updateCurveMarker = function () {
     } //condition ends here
   })
 
-  console.log("curveMarker",curveMarker)
 
   return true;
 };
@@ -350,9 +382,6 @@ function init() {
     name: "Styled Map"
   });
   objectMap = new dashBoardMap('map-canvas');
-
-  google.maps.event.addListener(objectMap.map, 'projection_changed', objectMap.updateCurveMarker.bind(objectMap));
-  google.maps.event.addListener(objectMap.map, 'zoom_changed', objectMap.updateCurveMarker.bind(objectMap));
   return objectMap;
 
 }

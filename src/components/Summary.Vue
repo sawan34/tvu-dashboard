@@ -31,19 +31,65 @@
 
 <script>
 import summaryItems from "../Constant/constant.data.js";
+import { testActions } from "../actions/test.action";
+
 import init from '../map/script.js';
 export default {
   mounted() {
-    this.mapsOp = init();
-    var _objMapsInfo = summaryItems.markerInfo;
+    // var bounds = this.mapsOp.map.getBounds();
+    var that =  this;
+    that.mapsOp = init();
+    that.xyz = 10;
+    // google.maps.event.addListener(that.mapsOp.map, 'projection_changed', that.mapsOp.updateCurveMarker.bind(that.mapsOp,function(data){
 
-    for (const key in _objMapsInfo) {
-      if (_objMapsInfo.hasOwnProperty(key)) {
-        let element = _objMapsInfo[key];
-        this.mapsOp.createMarker(summaryItems.markerInfo[key].mapLocation, true, summaryItems.markerInfo[key].arrowInfo,key);
-        
-      }
-    }
+    // }));
+    // google.maps.event.addListener(that.mapsOp.map, 'zoom_changed', that.mapsOp.updateCurveMarker.bind(that.mapsOp,function(data){
+    //    that.getData();
+    // }));
+    // var _objMapsInfo = summaryItems.markerInfo;
+
+    // for (const key in _objMapsInfo) {
+    //   if (_objMapsInfo.hasOwnProperty(key)) {
+    //     let element = _objMapsInfo[key];
+    //     this.mapsOp.createMarker(summaryItems.markerInfo[key].mapLocation, true, summaryItems.markerInfo[key].arrowInfo,key);
+    //   }
+    // }
+    //this.getData();
+
+  /*
+   // function(){
+     that.getData();
+   }
+*/
+
+google.maps.event.addListener(that.mapsOp.map, 'projection_changed', function(){
+  const toSendData = that.getCornerData(that.mapsOp.map);
+  that.getData(toSendData).then(function(data){
+      that.successHandle(data);
+      that.mapsOp.updateCurveMarker.call(that.mapsOp);
+  });
+});
+
+ google.maps.event.addListener(that.mapsOp.map, 'zoom_changed',function(){
+       console.log("ddd")
+      that.mapsOp.removeAllMarker();
+      const toSendData = that.getCornerData(that.mapsOp.map);
+      that.getData(toSendData).then(function(data){
+          that.successHandle(data);
+          that.mapsOp.updateCurveMarker.call(that.mapsOp);
+      });
+
+ });
+
+    //this.createMarker(_objMapsInfo);
+    // google.maps.event.addListener(that.mapsOp.map, 'projection_changed', that.mapsOp.updateCurveMarker.bind(that.mapsOp,function(data){
+    //       that.getData();
+    //       console.log("Projection");
+    // }));
+    // google.maps.event.addListener(that.mapsOp.map, 'zoom_changed', that.mapsOp.updateCurveMarker.bind(that.mapsOp,function(data){
+    //     console.log(data);
+    // }));
+
   },
   name: 'Summary',
   created () {
@@ -54,15 +100,14 @@ export default {
       let selectedLi = this.$data.summaryCheckboxes.find(item=>item.id === e);
       let activeClass = selectedLi.class;
       selectedLi.class  =  activeClass ==="active"? "":"active" ;
-      
       if(summaryItems.markerInfo[e]){
         if(activeClass ==="active"){
-          this.mapsOp.hideMarker(e); 
+          this.mapsOp.hideMarker(e);
         }else{
           this.mapsOp.showMarker(e);
         }
       }
-      
+
     },
     add: function (e) {
       e.preventDefault();
@@ -79,13 +124,51 @@ export default {
                         let index = Math.floor(Math.random() * (9 - 0 + 1)) + 0;
                         self.$data.summaryData = summaryItems.summaryData[index]
                    }, 10000);
+    },
+    getData(data) {
+      // testActions
+      //   .getData()
+      //   .then(this.successHandle)
+      //   .catch(this.errorHandle);
+      return testActions.getData(data)
+    },
+    getCornerData(_obj){
+      var bounds  =  _obj.getBounds();
+      var NECorner = bounds.getNorthEast(); //right top
+      var SWCorner = bounds.getSouthWest(); //left bottom
+      var NWCorner = new google.maps.LatLng(NECorner.lat(), SWCorner.lng()); //left top
+      var SECorner = new google.maps.LatLng(SWCorner.lat(), NECorner.lng()); //right bottom
+      var dataToSend = {
+        leftTop:NWCorner.lat() +"," + NWCorner.lng(),
+        leftBottom:SECorner.lat()+"," +SECorner.lng(),
+        rightTop:NECorner.lat()+"," +NECorner.lng(),
+        rightBottom:SECorner.lat()+"," +SECorner.lng(),
+      }
+      return dataToSend;
+  },
+    createMarker(_objMapsInfo){
+    for (const key in _objMapsInfo) {
+      if (_objMapsInfo.hasOwnProperty(key)) {
+        let element = _objMapsInfo[key];
+        this.mapsOp.createMarker(element.mapLocation, true, element.arrowInfo,key);
+      }
+     }
+    },
+    successHandle(data) {
+      var _objMapsInfo = data.data.markerInfo;
+      this.createMarker(_objMapsInfo);
+      return data;
+    },
+    errorHandle(error) {
+      console.log(error);
     }
   },data() {
     return {
       isShow: false,
       errors: {},
       summaryCheckboxes:summaryItems.summaryItems,
-      summaryData:summaryItems.summaryData[0]
+      summaryData:summaryItems.summaryData[0],
+      data: {}
     };
   },
 }

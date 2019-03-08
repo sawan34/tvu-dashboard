@@ -28,7 +28,8 @@ var data = {
         {
           lat: 17.987557,
           long: 77.1389453
-        }],
+        },
+      ],
         arrowInfo: {doubleArrow: true},
 
       },
