@@ -254,7 +254,7 @@ dashBoardMap.prototype.createMarker = function (objectLongLititue, isArrow, arro
       maxWidth: 200
     });
 
-    infoWindow.push(info);
+    //infoWindow.push(info); //used for info popup
     return new Marker({
       position: item,
       draggable: false,
@@ -274,11 +274,11 @@ dashBoardMap.prototype.createMarker = function (objectLongLititue, isArrow, arro
   };
   buildMarker.id = id;
   this.markers.push(buildMarker);
-  this.markers.forEach((item, i) => {
-    item[0].addListener('mouseover', function () {
-      infoWindow[i].open(this.map, item[0]);
-    });
-  });
+  // this.markers.forEach((item, i) => {
+  //   item[0].addListener('mouseover', function () {
+  //     infoWindow[i].open(this.map, item[0]);
+  //   });
+  // });  used for pop up window
 };
 
 dashBoardMap.prototype.createArrow = function (Marker, pos, rotation, direction) {

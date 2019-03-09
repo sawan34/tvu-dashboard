@@ -11,7 +11,7 @@ import axios from "axios";
  */
 const post = (url = "", header = {}, body = "") =>
   axios
-    .post(url, body, header)
+    .post(url,body, header)
     .then(handleResponse)
     .catch(error);
 

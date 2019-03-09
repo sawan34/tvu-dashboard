@@ -32,6 +32,7 @@
 <script>
 import summaryItems from "../Constant/constant.data.js";
 import { testActions } from "../actions/test.action";
+import {getListMarkerInfo,setStructMapLocationArrowInfo} from "../map/convertDataForUI.js"
 
 import init from '../map/script.js';
 export default {
@@ -136,11 +137,11 @@ google.maps.event.addListener(that.mapsOp.map, 'projection_changed', function(){
       var bounds  =  _obj.getBounds();
       var NECorner = bounds.getNorthEast(); //right top
       var SWCorner = bounds.getSouthWest(); //left bottom
-      var NWCorner = new google.maps.LatLng(NECorner.lat(), SWCorner.lng()); //left top
-      var SECorner = new google.maps.LatLng(SWCorner.lat(), NECorner.lng()); //right bottom
+      var NWCorner = new google.maps.LatLng({lat: NECorner.lat(), lng: SWCorner.lng()}); //left top
+      var SECorner = new google.maps.LatLng({lat: SWCorner.lat(), lng: NECorner.lng()}); //right bottom
       var dataToSend = {
         leftTop:NWCorner.lat() +"," + NWCorner.lng(),
-        leftBottom:SECorner.lat()+"," +SECorner.lng(),
+        leftBottom:SWCorner.lat()+"," +SWCorner.lng(),
         rightTop:NECorner.lat()+"," +NECorner.lng(),
         rightBottom:SECorner.lat()+"," +SECorner.lng(),
       }
@@ -155,7 +156,9 @@ google.maps.event.addListener(that.mapsOp.map, 'projection_changed', function(){
      }
     },
     successHandle(data) {
-      var _objMapsInfo = data.data.markerInfo;
+      setStructMapLocationArrowInfo(data.data);
+
+      var _objMapsInfo = getListMarkerInfo().markerInfo;
       this.createMarker(_objMapsInfo);
       return data;
     },

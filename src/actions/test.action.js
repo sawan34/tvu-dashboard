@@ -13,13 +13,13 @@ import { urlConstants } from "../constants/uri.constants";
  * Description: handle getdata
  * @return {Promise}
  */
-const getData = () => {
+const getData = (dataToPost) => {
   let url = "";
   let body = { };
   let header = {};
   url = urlConstants.BASEURL;
 
-  return APIService.get(url, header, body).then(
+  return APIService.post(url, header, dataToPost).then(
     data => {
         let getResponse = data;
         if (getResponse) {
