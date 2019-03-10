@@ -260,7 +260,6 @@ dashBoardMap.prototype.createMarker = function (objectLongLititue, isArrow, arro
       draggable: false,
       clickable: true,
       map: this.map,
-      animation: google.maps.Animation.DROP,
       icon: image,
       label: 34,
     });

@@ -148,6 +148,7 @@ google.maps.event.addListener(that.mapsOp.map, 'projection_changed', function(){
       return dataToSend;
   },
     createMarker(_objMapsInfo){
+      debugger;
     for (const key in _objMapsInfo) {
       if (_objMapsInfo.hasOwnProperty(key)) {
         let element = _objMapsInfo[key];

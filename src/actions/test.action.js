@@ -18,8 +18,9 @@ const getData = (dataToPost) => {
   let body = { };
   let header = {};
   url = urlConstants.BASEURL;
+  var queryString = Object.keys(dataToPost).map(key => key + '=' + dataToPost[key]).join('&');
 
-  return APIService.post(url, header, dataToPost).then(
+  return APIService.post(url+"?"+queryString, header,{}).then(
     data => {
         let getResponse = data;
         if (getResponse) {

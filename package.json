@@ -1,6 +1,7 @@
 {
   "name": "tvuapp",
   "version": "1.0.0",
+  "homepage": ".",
   "description": "Its a TVU project",
   "author": "Sawan Kumar",
   "private": true,
