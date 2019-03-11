@@ -248,24 +248,27 @@ dashBoardMap.prototype.createMarker = function (objectLongLititue, isArrow, arro
     return new LatLng(item.lat, item.long);
   });
 
+  let stationId;
+  var info = []
   var buildMarker = this.pos.map((item, i) => {
-    var info = new google.maps.InfoWindow({
-      content: contentString,
-      maxWidth: 200
+    stationId = objectLongLititue[i].stationID;
+     info[i] = new google.maps.InfoWindow({
+      content: "<b>Station Caller Id: </b>"+stationId,
+      maxWidth: 250
     });
 
-    //infoWindow.push(info); //used for info popup
+    console.log(stationId);
     return new Marker({
       position: item,
       draggable: false,
       clickable: true,
       map: this.map,
       icon: image,
-      label: 34,
+      label: 34
     });
   });
 
-
+  infoWindow.push(info); //used for info popup
 
   buildMarker.arrowInfo = {
     isArrow: isArrow || false,
@@ -273,11 +276,16 @@ dashBoardMap.prototype.createMarker = function (objectLongLititue, isArrow, arro
   };
   buildMarker.id = id;
   this.markers.push(buildMarker);
-  // this.markers.forEach((item, i) => {
-  //   item[0].addListener('mouseover', function () {
-  //     infoWindow[i].open(this.map, item[0]);
-  //   });
-  // });  used for pop up window
+
+  buildMarker[0].addListener('click', function () {
+    info[0].open(this.map, buildMarker[0]);
+  });
+
+  if(buildMarker.length > 1 ){
+    buildMarker[1].addListener('click', function () {
+      info[1].open(this.map, buildMarker[1]);
+    });
+  };
 };
 
 dashBoardMap.prototype.createArrow = function (Marker, pos, rotation, direction) {
@@ -377,9 +385,9 @@ dashBoardMap.prototype.updateCurveMarker = function () {
   return true;
 };
 function init() {
-  var styledMap = new google.maps.StyledMapType(styles, {
-    name: "Styled Map"
-  });
+  // var styledMap = new google.maps.StyledMapType(styles, {
+  //   name: "Styled Map"
+  // });
   objectMap = new dashBoardMap('map-canvas');
   return objectMap;
 

@@ -1,6 +1,6 @@
 var listMarkerInfo =  {"markerInfo" : {} }
 var listMapLocation;
-var arrowInfo; 
+var arrowInfo;
 var structLanLong;
 
 function init(){
@@ -8,13 +8,13 @@ function init(){
 }
 
 function reset(){
-	listMapLocation = []; 
-	arrowInfo = {"doubleArrow": ""}; 
-	structLanLong = {"lat": "", "long": "" };
+	listMapLocation = [];
+	arrowInfo = {"doubleArrow": ""};
+	structLanLong = {"lat": "", "long": "", stationID:"" };
 }
 
-function pushLanLong(_lat, _long){
-	setStructLanLong(_lat, _long);
+function pushLanLong(_lat, _long, _stationID){
+	setStructLanLong(_lat, _long, _stationID);
 	listMapLocation.push(getStructLanLong());
 }
 
@@ -22,8 +22,8 @@ function getListMapLocation(){
 	return listMapLocation;
 }
 
-function setStructLanLong(_lat, _long){
-	structLanLong = {"lat": _lat, "long": _long };
+function setStructLanLong(_lat, _long, _stationID){
+	structLanLong = {"lat": _lat, "long": _long, "stationID":_stationID };
 }
 
 function getStructLanLong(){
@@ -52,15 +52,18 @@ function getStructMapLocationArrowInfo(){
 
 export function setStructMapLocationArrowInfo(listData){
 	var data;
+	var stationID;
 	for(var index=0; index<listData.length; index++){
 		data = listData[index];
 		var curverFlag=0;
 		if(data["peerLat"] && data["peerLng"]){
-			pushLanLong( data["peerLat"],  data["peerLng"]);
+			stationID =  data["livePeerID"] ? data["livePeerID"] : data["peerID"];
+			pushLanLong( data["peerLat"],  data["peerLng"],  stationID );
 			curverFlag++;
 		}
 		if(data["livePeerLat"] &&  data["livePeerLng"]){
-			pushLanLong( data["livePeerLat"],  data["livePeerLng"]);
+			stationID =  data["peerID"] ? data["peerID"] : data["livePeerID"];
+			pushLanLong( data["livePeerLat"],  data["livePeerLng"], stationID);
 			curverFlag++;
 		}
 		if(curverFlag==2){

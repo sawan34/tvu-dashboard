@@ -1,9 +1,9 @@
 {
   "name": "tvuapp",
   "version": "1.0.0",
-  "homepage": ".",
   "description": "Its a TVU project",
   "author": "Sawan Kumar",
+   "homepage": ".",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",

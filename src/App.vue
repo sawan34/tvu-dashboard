@@ -36,14 +36,18 @@ export default {
             stroke-dasharray: 2;
         }
 
+        .gm-style-iw-d{
+          overflow: auto !important;
+        }
+
         /*style the box*/
         .gm-style .gm-style-iw {
             background-color: #3C61AD !important;
             top: 0 !important;
             left: 0 !important;
             width: 100% !important;
-            height: 200px !important;
-            min-height: 120px !important;
+            /*height: 200px !important;*/
+            min-height: 35px !important;
             padding-top: 10px;
             display: block !important;
          }
@@ -62,7 +66,7 @@ export default {
             padding: 0;
             top: 0;
             color: #fff;
-            font-size: 16px;
+            font-size: 13px;
         }
 
         /*style the link*/
